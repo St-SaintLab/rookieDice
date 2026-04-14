@@ -1,0 +1,9 @@
+<button class="action-btn action-btn--primary" @onclick="OnClick" disabled="@Disabled">
+    <span class="action-btn__glow"></span>
+    Roll dice
+</button>
+
+@code {
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+}

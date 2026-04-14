@@ -1,0 +1,67 @@
+<div class="panel glass-panel result-panel">
+    <div class="panel__header">
+        <div>
+            <div class="panel__eyebrow">Results</div>
+            <h2 class="panel__title">@Heading</h2>
+        </div>
+        <div class="result-panel__summary">@Summary</div>
+    </div>
+
+    <div class="result-grid">
+        @if (Results is not null && Results.Count > 0)
+        {
+            foreach (var result in Results)
+            {
+                <article class="result-card @(result.IsWinner ? "result-card--winner" : string.Empty)">
+                    <div class="result-card__top">
+                        <div>
+                            <div class="result-card__name">@result.ActorName</div>
+                            <div class="result-card__sub">@result.RuleLabel</div>
+                        </div>
+                        @if (result.IsWinner)
+                        {
+                            <div class="result-card__badge">Winner</div>
+                        }
+                    </div>
+
+                    <div class="result-card__dice">
+                        @foreach (var pip in result.DiceValues)
+                        {
+                            <span class="mini-die">@pip</span>
+                        }
+                    </div>
+
+                    <div class="result-card__score">
+                        <span>Total</span>
+                        <strong>@result.Total</strong>
+                    </div>
+                </article>
+            }
+        }
+        else
+        {
+            <div class="empty-state">Roll the dice to reveal the score panels.</div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public IReadOnlyList<RoundResult> Results { get; set; } = Array.Empty<RoundResult>();
+    [Parameter] public GameMode Mode { get; set; }
+
+    private string Heading => Mode switch
+    {
+        GameMode.Practice => "Practice results",
+        GameMode.VsAI => "User vs AI",
+        GameMode.Multiplayer => "Multiplayer results",
+        _ => "Results"
+    };
+
+    private string Summary => Mode switch
+    {
+        GameMode.Practice => "Only the user result is shown.",
+        GameMode.VsAI => "Both user and AI results are shown.",
+        GameMode.Multiplayer => "All player results are shown.",
+        _ => string.Empty
+    };
+}

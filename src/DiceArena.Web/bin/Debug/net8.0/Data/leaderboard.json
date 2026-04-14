@@ -1,0 +1,14 @@
+{
+  "multiplayer": {
+    "mode": "Multiplayer",
+    "playerName": "—",
+    "score": 0,
+    "achievedAtUtc": "0001-01-01T00:00:00+00:00"
+  },
+  "vsAi": {
+    "mode": "VsAI",
+    "playerName": "—",
+    "score": 0,
+    "achievedAtUtc": "0001-01-01T00:00:00+00:00"
+  }
+}

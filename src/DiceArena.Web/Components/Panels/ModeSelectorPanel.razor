@@ -1,0 +1,36 @@
+<div class="panel glass-panel mode-panel">
+    <div class="panel__header">
+        <div>
+            <div class="panel__eyebrow">Game mode</div>
+            <h2 class="panel__title">@CurrentModeLabel</h2>
+        </div>
+        <div class="mode-panel__badge">@DiceCount dice · @CurrentSides sides</div>
+    </div>
+
+    <div class="mode-panel__choices">
+        <button class="chip @(DiceCount == 2 ? "chip--active" : "")" @onclick="() => SelectDiceCount.InvokeAsync(2)">2 dice</button>
+        <button class="chip @(DiceCount == 3 ? "chip--active" : "")" @onclick="() => SelectDiceCount.InvokeAsync(3)">3 dice</button>
+        <button class="chip @(DiceCount == 4 ? "chip--active" : "")" @onclick="() => SelectDiceCount.InvokeAsync(4)">4 dice</button>
+    </div>
+
+    <div class="mode-panel__meta">
+        <div><span>Default setup</span><strong>2 dice · 4 sides</strong></div>
+        <div><span>Active set</span><strong>@ActiveDiceLabel</strong></div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public GameMode CurrentMode { get; set; }
+    [Parameter] public int DiceCount { get; set; }
+    [Parameter] public int CurrentSides { get; set; }
+    [Parameter] public string ActiveDiceLabel { get; set; } = "Default";
+    [Parameter] public EventCallback<int> SelectDiceCount { get; set; }
+
+    private string CurrentModeLabel => CurrentMode switch
+    {
+        GameMode.Practice => "Practice",
+        GameMode.VsAI => "Vs AI",
+        GameMode.Multiplayer => "Multiplayer",
+        _ => "Practice"
+    };
+}

@@ -1,0 +1,69 @@
+<div class="panel glass-panel dice-arena-panel">
+
+    <div class="panel__header">
+
+        <div>
+
+        </div>
+
+        <div class="dice-arena-panel__status">@StatusText</div>
+
+    </div>
+
+
+
+    <div class="dice-stage">
+
+        @if (ShowPrompt)
+
+        {
+
+            <button type="button"
+
+                    class="dice-stage__prompt"
+
+                    @onclick="OnRollRequested"
+
+                    aria-label="Roll the dice">
+
+                <span class="dice-stage__prompt-text">Click to roll dices!</span>
+
+                <span class="dice-stage__prompt-frame">
+
+                    <img src="images/logo.svg" alt="Dice Arena logo" />
+
+                </span>
+
+            </button>
+
+        }
+
+
+
+        <canvas id="diceArenaCanvas"
+
+                width="900"
+
+                height="540"
+
+                class="dice-stage__canvas @(IsRolling ? "dice-stage__canvas--active" : "dice-stage__canvas--idle")"
+
+                @onclick="OnRollRequested"></canvas>
+
+    </div>
+
+</div>
+
+
+
+@code {
+
+    [Parameter] public string StatusText { get; set; } = "Ready to roll";
+
+    [Parameter] public bool IsRolling { get; set; }
+
+    [Parameter] public bool ShowPrompt { get; set; }
+
+    [Parameter] public EventCallback OnRollRequested { get; set; }
+
+}

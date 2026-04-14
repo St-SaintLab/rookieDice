@@ -1,0 +1,97 @@
+@if (Visible)
+{
+    <div class="modal-backdrop how-to-play-modal-backdrop">
+        <div class="modal-card glass-panel how-to-play-modal" role="dialog" aria-modal="true" aria-labelledby="how-to-play-title" aria-describedby="how-to-play-body">
+            <div class="how-to-play-modal__shine"></div>
+
+            <div class="how-to-play-modal__header">
+                <h2 class="how-to-play-modal__title" id="how-to-play-title">How to play</h2>
+                <button type="button" class="icon-btn how-to-play-modal__close" @onclick="OnClose" aria-label="Close how to play modal">✕</button>
+            </div>
+
+            <div class="how-to-play-modal__body" id="how-to-play-body">
+                <article class="how-to-play-modal__section">
+                    <h3 class="how-to-play-modal__section-title">1. How to play:</h3>
+                    <p class="how-to-play-modal__copy">
+                        Press Roll dice to start a roll. The dice canvas itself and the prompt overlay are also clickable when the game is idle.<br />
+                        You can only roll when the game is not paused and not already rolling.<br />
+                        If the game is paused, you must resume it before rolling.
+                    </p>
+                </article>
+
+                <article class="how-to-play-modal__section">
+                    <h3 class="how-to-play-modal__section-title">2. Winning rule:</h3>
+                    <p class="how-to-play-modal__copy">
+                        A winning total is one that matches the active dice-count rule:<br />
+                        2 dice → a perfect square<br />
+                        3 dice → a perfect cube<br />
+                        4 dice → a perfect fourth power.<br />
+                        The result panel labels the rule for each roll, and winning results are visually marked as Winner.
+                    </p>
+                </article>
+
+                <article class="how-to-play-modal__section">
+                    <h3 class="how-to-play-modal__section-title">3. Game modes:</h3>
+                    <p class="how-to-play-modal__copy">
+                        The app has three modes: Practice, Vs AI, and Multiplayer.<br />
+                        The Mode button opens the mode selector.<br />
+                        Mode changes reset the current session.
+                    </p>
+                </article>
+
+                <article class="how-to-play-modal__section">
+                    <h3 class="how-to-play-modal__section-title">4. Dice settings:</h3>
+                    <p class="how-to-play-modal__copy">
+                        You can choose 2 dice, 3 dice, or 4 dice from the mode panel.<br />
+                        The current mode and selected dice count are shown in the mode panel.<br />
+                        The app starts with 2 dice by default.
+                    </p>
+                </article>
+
+                <article class="how-to-play-modal__section">
+                    <h3 class="how-to-play-modal__section-title">5. Multiplayer rules:</h3>
+                    <p class="how-to-play-modal__copy">
+                        Multiplayer requires at least two player names. If fewer than two valid names are entered, rolling is blocked.<br />
+                        The player list supports 2 to 4 players.<br />
+                        You can add or remove player slots with the Add player and Remove player buttons.
+                    </p>
+                </article>
+
+                <article class="how-to-play-modal__section">
+                    <h3 class="how-to-play-modal__section-title">6. Custom dice:</h3>
+                    <p class="how-to-play-modal__copy">
+                        The Custom dice button opens the dice builder.<br />
+                        In the builder, you can set number of sides, color, and dice style, then create a new custom die.<br />
+                        Creating a custom die activates it immediately.
+                    </p>
+                </article>
+
+                <article class="how-to-play-modal__section">
+                    <h3 class="how-to-play-modal__section-title">7. Session controls:</h3>
+                    <p class="how-to-play-modal__copy">
+                        Pause suspends play and changes the button to Resume.<br />
+                        Restart resets the current game session.
+                    </p>
+                </article>
+
+                <article class="how-to-play-modal__section">
+                    <h3 class="how-to-play-modal__section-title">8. Leaderboard:</h3>
+                    <p class="how-to-play-modal__copy">
+                        The leaderboard tracks the top Multiplayer score and top Vs AI score.<br />
+                        The leaderboard is persisted to Data/leaderboard.json.<br />
+                        A Reset leaderboard button clears the saved leaderboard state.
+                    </p>
+                </article>
+            </div>
+
+            <div class="how-to-play-modal__footer">
+                <button type="button" class="action-btn action-btn--accent how-to-play-modal__button" @onclick="OnClose">Close guide</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+}

@@ -1,0 +1,432 @@
+@page "/"
+
+@implements IDisposable
+
+@inject GameStateService GameState
+@inject DiceBuilderService DiceBuilder
+@inject AudioService Audio
+@inject LeaderboardService LeaderboardService
+@inject IJSRuntime JS
+
+<div class="page-hero glass-panel">
+    <h1 class="page-hero__title">Roll Dices</h1>
+</div>
+
+<div class="page-grid">
+    <section class="buttons-column glass-panel">
+        <div class="roll-panel glass-panel">
+            <div class="panel__header">
+                <div>
+                    <div class="panel__eyebrow">Action</div>
+                    <h2 class="panel__title">Roll Dices</h2>
+                </div>
+            </div>
+
+            <RollDiceButton OnClick="@RollAsync" Disabled="@(!GameState.CanRoll)" />
+        </div>
+
+        <div class="control-bar">
+            <ModeButton OnClick="@OpenModeSelectorAsync" />
+
+            <PauseButton OnClick="@TogglePauseAsync" IsPaused="@GameState.IsPaused" />
+
+            <RestartButton OnClick="@RestartAsync" />
+
+            <CustomDiceButton OnClick="@OpenBuilderAsync" />
+
+            <button type="button" class="action-btn how-to-play-btn" @onclick="OpenHowToPlayAsync">
+                How to play
+            </button>
+        </div>
+
+        <ModeSelectorPanel CurrentMode="@GameState.CurrentMode"
+                           DiceCount="@GameState.DiceCount"
+                           CurrentSides="@GameState.CurrentDiceSides"
+                           ActiveDiceLabel="@GameState.ActiveDiceLabel"
+                           SelectDiceCount="@OnDiceCountSelected" />
+
+        @if (GameState.CurrentMode == GameMode.Multiplayer)
+        {
+            <div class="panel players-panel">
+                <div class="panel__header">
+                    <div>
+                        <div class="panel__eyebrow">Players</div>
+                        <h2 class="panel__title">Multiplayer names are required</h2>
+                    </div>
+
+                    <div class="players-panel__hint">2 to 4 players</div>
+                </div>
+
+                @for (var i = 0; i < GameState.PlayerNames.Count; i++)
+                {
+                    var playerIndex = i;
+
+                    <div class="player-row">
+                        <label>Player @(playerIndex + 1)</label>
+                        <input value="@GameState.PlayerNames[playerIndex]"
+                               @oninput="e => UpdatePlayerName(playerIndex, e.Value?.ToString() ?? string.Empty)"
+                               placeholder="Enter player name" />
+                    </div>
+                }
+
+                <div class="builder-actions">
+                    @if (GameState.PlayerNames.Count < 4)
+                    {
+                        <button class="chip" @onclick="@AddPlayerAsync">Add player</button>
+                    }
+
+                    @if (GameState.PlayerNames.Count > 2)
+                    {
+                        <button class="chip" @onclick="@RemovePlayerAsync">Remove player</button>
+                    }
+                </div>
+            </div>
+        }
+    </section>
+
+    <section class="arena-column">
+        <DiceArenaPanel StatusText="@GameState.StatusText"
+                        IsRolling="@GameState.IsRolling"
+                        ShowPrompt="@(!GameState.IsRolling && GameState.CurrentResults.Count == 0)"
+                        OnRollRequested="@RollAsync" />
+    </section>
+
+    <section class="results-column">
+        <ResultPanel Results="@GameState.CurrentResults" Mode="@GameState.CurrentMode" />
+    </section>
+
+    <section class="leaderboard-column">
+        <LeaderboardPanel MultiplayerPlayerName="@GameState.Leaderboard.MultiplayerPlayerName"
+                          MultiplayerScore="@GameState.Leaderboard.MultiplayerScore"
+                          VsAiPlayerName="@GameState.Leaderboard.VsAiPlayerName"
+                          VsAiScore="@GameState.Leaderboard.VsAiScore"
+                          OnReset="@ResetLeaderboardAsync" />
+    </section>
+</div>
+
+<GameModeSelectorModal Visible="@_showModeSelector"
+                       CurrentMode="@GameState.CurrentMode"
+                       OnClose="@CloseModeSelectorAsync"
+                       Select="@SelectModeAsync" />
+
+<DiceBuilderModal Visible="@_showBuilder"
+                  OnClose="@CloseBuilderAsync"
+                  OnCreate="@CreateCustomDiceAsync"
+                  Activate="@ActivateCustomDiceAsync"
+                  CustomDice="@DiceBuilder.CustomDice"
+                  ActiveDiceId="@DiceBuilder.ActiveCustomDiceId" />
+
+<HowToPlayModal Visible="@_showHowToPlay"
+                OnClose="@CloseHowToPlayAsync" />
+
+<WinModal Visible="@_showWinModal"
+          WinnerName="@_winWinnerName"
+          WinningTotal="@_winWinningTotal"
+          RuleLabel="@_winRuleLabel"
+          Message="@_winMessage"
+          OnClose="@CloseWinModalAsync" />
+
+@code {
+    private bool _showBuilder;
+    private bool _showHowToPlay;
+    private bool _showModeSelector;
+    private bool _showWinModal;
+    private string _winWinnerName = string.Empty;
+    private int _winWinningTotal;
+    private string _winRuleLabel = string.Empty;
+    private string _winMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        GameState.StateChanged += HandleStateChanged;
+        DiceBuilder.StateChanged += HandleBuilderChanged;
+    }
+
+    private void HandleStateChanged() => InvokeAsync(StateHasChanged);
+    private void HandleBuilderChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        GameState.StateChanged -= HandleStateChanged;
+        DiceBuilder.StateChanged -= HandleBuilderChanged;
+    }
+
+    private async Task RollAsync()
+    {
+        var validation = GameState.ValidateBeforeRoll();
+
+        if (!string.IsNullOrWhiteSpace(validation))
+        {
+            GameState.SetStatus(validation);
+            return;
+        }
+
+        if (GameState.CurrentMode == GameMode.VsAI)
+        {
+            var userResult = GameState.RollVsAiTurn("You", isFinalTurn: false);
+
+            var userPayload = new[]
+            {
+                new
+                {
+                    actorName = userResult.ActorName,
+                    diceValues = userResult.DiceValues,
+                    total = userResult.Total,
+                    isWinner = userResult.IsWinner,
+                    diceColor = userResult.Color,
+                    diceStyle = userResult.Style,
+                    mode = GameState.CurrentMode.ToString()
+                }
+            };
+
+            await Audio.PlayRollAsync();
+            await JS.InvokeVoidAsync("DiceCanvas.roll", "diceArenaCanvas", userPayload);
+            await JS.InvokeVoidAsync("DiceAudio.setPaused", false);
+            await Task.Delay(1400);
+
+            if (userResult.IsWinner)
+            {
+                await Audio.PlayWinAsync();
+                ShowWinModal(userResult);
+                return;
+            }
+
+            await Task.Delay(250);
+
+            var aiResult = GameState.RollVsAiTurn("AI", isFinalTurn: true);
+
+            var aiPayload = new[]
+            {
+                new
+                {
+                    actorName = aiResult.ActorName,
+                    diceValues = aiResult.DiceValues,
+                    total = aiResult.Total,
+                    isWinner = aiResult.IsWinner,
+                    diceColor = aiResult.Color,
+                    diceStyle = aiResult.Style,
+                    mode = GameState.CurrentMode.ToString()
+                }
+            };
+
+            await Audio.PlayRollAsync();
+            await JS.InvokeVoidAsync("DiceCanvas.roll", "diceArenaCanvas", aiPayload);
+            await JS.InvokeVoidAsync("DiceAudio.setPaused", false);
+            await Task.Delay(1400);
+
+            if (aiResult.IsWinner)
+            {
+                await Audio.PlayWinAsync();
+                ShowWinModal(aiResult);
+            }
+
+            return;
+        }
+
+        if (GameState.CurrentMode == GameMode.Multiplayer)
+        {
+            var result = GameState.BeginMultiplayerTurn();
+
+            var canvasPayload = new[]
+            {
+                new
+                {
+                    actorName = result.ActorName,
+                    diceValues = result.DiceValues,
+                    total = result.Total,
+                    isWinner = result.IsWinner,
+                    diceColor = result.Color,
+                    diceStyle = result.Style,
+                    mode = GameState.CurrentMode.ToString()
+                }
+            };
+
+            await Audio.PlayRollAsync();
+            await JS.InvokeVoidAsync("DiceCanvas.roll", "diceArenaCanvas", canvasPayload);
+            await JS.InvokeVoidAsync("DiceAudio.setPaused", false);
+            await Task.Delay(1400);
+
+            if (result.IsWinner)
+            {
+                await Audio.PlayWinAsync();
+            }
+
+            GameState.CompleteMultiplayerTurn(result);
+
+            if (result.IsWinner)
+            {
+                ShowWinModal(result);
+            }
+
+            return;
+        }
+
+        var results = GameState.BuildRound();
+        var winningResult = results.FirstOrDefault(x => x.IsWinner);
+
+        GameState.SetStatus("Rolling the dice...");
+
+        await Audio.PlayRollAsync();
+        StateHasChanged();
+
+        var canvasPayloadOtherModes = results.Select(r => new
+        {
+            actorName = r.ActorName,
+            diceValues = r.DiceValues,
+            total = r.Total,
+            isWinner = r.IsWinner,
+            diceColor = r.Color,
+            diceStyle = r.Style,
+            mode = GameState.CurrentMode.ToString()
+        });
+
+        await JS.InvokeVoidAsync("DiceCanvas.roll", "diceArenaCanvas", canvasPayloadOtherModes);
+        await JS.InvokeVoidAsync("DiceAudio.setPaused", false);
+        await Task.Delay(1400);
+
+        if (winningResult is not null)
+        {
+            await Audio.PlayWinAsync();
+        }
+
+        GameState.CommitRound(results);
+
+        if (winningResult is not null)
+        {
+            ShowWinModal(winningResult);
+        }
+    }
+
+    private Task OpenModeSelectorAsync()
+    {
+        if (GameState.IsRolling)
+            return Task.CompletedTask;
+
+        _showBuilder = false;
+        _showHowToPlay = false;
+        _showModeSelector = true;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseModeSelectorAsync()
+    {
+        _showModeSelector = false;
+        return Task.CompletedTask;
+    }
+
+    private Task SelectModeAsync(GameMode mode)
+    {
+        GameState.SetMode(mode);
+        _showModeSelector = false;
+        return Task.CompletedTask;
+    }
+
+    private async Task TogglePauseAsync()
+    {
+        GameState.TogglePause();
+        await JS.InvokeVoidAsync("DiceCanvas.setPaused", GameState.IsPaused);
+    }
+
+    private async Task RestartAsync()
+    {
+        GameState.RestartCurrentGame();
+        await JS.InvokeVoidAsync("DiceCanvas.reset");
+    }
+
+    private Task OpenBuilderAsync()
+    {
+        _showModeSelector = false;
+        _showHowToPlay = false;
+        _showBuilder = true;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseBuilderAsync()
+    {
+        _showBuilder = false;
+        return Task.CompletedTask;
+    }
+
+    private Task OpenHowToPlayAsync()
+    {
+        _showBuilder = false;
+        _showModeSelector = false;
+        _showHowToPlay = true;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseHowToPlayAsync()
+    {
+        _showHowToPlay = false;
+        return Task.CompletedTask;
+    }
+
+    private Task CreateCustomDiceAsync(DiceDefinition dice)
+    {
+        DiceBuilder.AddCustomDice(dice);
+        GameState.UseCustomDice(dice.Id);
+        _showBuilder = false;
+        return Task.CompletedTask;
+    }
+
+    private Task ActivateCustomDiceAsync(string id)
+    {
+        GameState.UseCustomDice(id);
+        return Task.CompletedTask;
+    }
+
+    private Task OnDiceCountSelected(int count)
+    {
+        GameState.SetDiceCount(count);
+        return Task.CompletedTask;
+    }
+
+    private Task AddPlayerAsync()
+    {
+        GameState.AddMultiplayerPlayer();
+        return Task.CompletedTask;
+    }
+
+    private Task RemovePlayerAsync()
+    {
+        GameState.RemoveMultiplayerPlayer();
+        return Task.CompletedTask;
+    }
+
+    private Task UpdatePlayerName(int index, string name)
+    {
+        GameState.SetPlayerName(index, name);
+        return Task.CompletedTask;
+    }
+
+    private async Task CloseWinModalAsync()
+    {
+        await Audio.StopWinAsync();
+        _showWinModal = false;
+    }
+
+    private Task ResetLeaderboardAsync()
+    {
+        LeaderboardService.Reset();
+        return Task.CompletedTask;
+    }
+
+    private void ShowWinModal(RoundResult result)
+    {
+        _winWinnerName = result.ActorName;
+        _winWinningTotal = result.Total;
+        _winRuleLabel = result.RuleLabel;
+        _winMessage = GetWinMessage(result);
+        _showWinModal = true;
+    }
+
+    private static string GetWinMessage(RoundResult result) => result.Mode switch
+    {
+        GameMode.Practice => "The table lights up with a clean hit. Collect your jackpot.",
+        GameMode.VsAI => result.ActorName.Equals("AI", StringComparison.OrdinalIgnoreCase)
+            ? "The AI hit the jackpot. The house lights flare in response."
+            : "You hit the jackpot. The crowd goes wild.",
+        GameMode.Multiplayer => $"{result.ActorName} takes the win and the table erupts in celebration.",
+        _ => "Jackpot!"
+    };
+}

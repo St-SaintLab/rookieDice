@@ -1,0 +1,229 @@
+@import url('theme.css');
+
+.glass-panel { position: relative; }
+
+.control-bar { align-items: center; }
+
+.action-btn--primary .action-btn__glow {
+    position:absolute; inset:-1px;
+    border-radius: 18px;
+    box-shadow: 0 0 22px rgba(124,247,212,0.2), 0 0 36px rgba(138,108,255,0.14);
+    pointer-events:none;
+}
+
+.dice-stage {
+    position: relative;
+}
+
+.dice-stage__canvas {
+    position: relative;
+    z-index: 1;
+}
+
+.dice-stage__canvas--idle {
+    cursor: pointer;
+}
+
+.dice-stage__prompt {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    width: 100%;
+    border: 0;
+    border-radius: 26px;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    padding: 1rem;
+}
+
+.dice-stage__prompt:focus-visible {
+    outline: 2px solid rgba(124, 247, 212, 0.55);
+    outline-offset: -2px;
+}
+
+.dice-stage__prompt-text {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+
+.dice-stage__prompt-frame {
+    width: min(38%, 148px);
+    aspect-ratio: 1 / 1;
+    padding: 0.6rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+    display: grid;
+    place-items: center;
+}
+
+.dice-stage__prompt-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.win-modal-backdrop {
+    background:
+        radial-gradient(circle at top, rgba(255, 214, 92, 0.28), transparent 34%),
+        rgba(4, 8, 17, 0.82);
+    overflow: hidden;
+}
+
+.win-modal.modal-card {
+    position: relative;
+    width: min(720px, 96vw);
+    padding: 1.2rem;
+    border-radius: 30px;
+    background:
+        radial-gradient(circle at top, rgba(255, 228, 140, 0.18), transparent 38%),
+        linear-gradient(180deg, rgba(48, 23, 4, 0.98), rgba(12, 12, 24, 0.96));
+    border: 1px solid rgba(255, 215, 95, 0.36);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        0 24px 80px rgba(0, 0, 0, 0.6),
+        0 0 72px rgba(255, 193, 72, 0.18);
+    overflow: hidden;
+    transform-origin: center;
+    animation: winModalEnter 0.45s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.win-modal__shine {
+    position: absolute;
+    inset: -28% -10% auto;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255, 230, 141, 0.3), transparent 60%);
+    pointer-events: none;
+    animation: winShine 2.2s ease-in-out infinite;
+}
+
+.win-modal__header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.win-modal__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #fff4bf, #ffc93f);
+    color: #2a1700;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 0 24px rgba(255, 208, 92, 0.34);
+    animation: jackpotPulse 1.4s ease-in-out infinite;
+}
+
+.win-modal__close {
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff7d2;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.win-modal__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 0.45rem;
+    padding: 1.25rem 0 0.4rem;
+    text-align: center;
+}
+
+.win-modal__eyebrow {
+    color: #ffdf8b;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.win-modal__title {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    color: #fff8cf;
+    text-shadow: 0 0 16px rgba(255, 214, 94, 0.32);
+}
+
+.win-modal__winner {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.win-modal__total {
+    font-size: clamp(3rem, 7vw, 4.6rem);
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    text-shadow:
+        0 0 12px rgba(255, 230, 140, 0.45),
+        0 0 36px rgba(255, 190, 70, 0.22);
+}
+
+.win-modal__rule {
+    color: #ffd77c;
+    font-weight: 800;
+}
+
+.win-modal__message {
+    margin: 0.35rem auto 0;
+    max-width: 48ch;
+    color: #f5e6c4;
+    line-height: 1.5;
+}
+
+.win-modal__footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    padding-top: 0.85rem;
+}
+
+.win-modal__button {
+    min-width: 190px;
+}
+
+.win-modal__confetti {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.win-modal__sparkle {
+    position: absolute;
+    left: var(--sparkle-x);
+    bottom: -18px;
+    width: var(--sparkle-size);
+    height: var(--sparkle-size);
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 1), rgba(255, 225, 120, 0.95) 35%, rgba(255, 225, 120, 0) 70%);
+    box-shadow: 0 0 18px rgba(255, 214, 92, 0.85);
+    opacity: 0;
+    animation: confettiRise var(--sparkle-speed) linear infinite, sparkleTwinkle 1.2s ease-in-out infinite;
+    animation-delay: var(--sparkle-delay), var(--sparkle-delay);
+}

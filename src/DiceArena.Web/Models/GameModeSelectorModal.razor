@@ -1,0 +1,42 @@
+@if (Visible)
+{
+    <div class="modal-backdrop mode-selector-backdrop" @onclick="OnClose">
+        <div class="modal-card glass-panel mode-selector-modal" @onclick:stopPropagation="true">
+            <div class="panel__header">
+                <div>
+                    <div class="panel__eyebrow">Game mode</div>
+                    <h2 class="panel__title">Choose a mode</h2>
+                </div>
+                <button class="icon-btn" @onclick="OnClose">✕</button>
+            </div>
+
+            <div class="mode-selector-modal__choices">
+                <button class="action-btn mode-selector-modal__choice @(CurrentMode == GameMode.Practice ? "mode-selector-modal__choice--active" : string.Empty)"
+                        @onclick="() => Select.InvokeAsync(GameMode.Practice)">
+                    Practice
+                </button>
+
+                <button class="action-btn mode-selector-modal__choice @(CurrentMode == GameMode.VsAI ? "mode-selector-modal__choice--active" : string.Empty)"
+                        @onclick="() => Select.InvokeAsync(GameMode.VsAI)">
+                    Vs AI
+                </button>
+
+                <button class="action-btn mode-selector-modal__choice @(CurrentMode == GameMode.Multiplayer ? "mode-selector-modal__choice--active" : string.Empty)"
+                        @onclick="() => Select.InvokeAsync(GameMode.Multiplayer)">
+                    Multiplayer
+                </button>
+            </div>
+
+            <div class="mode-selector-modal__footer">
+                <span>Select a mode to continue.</span>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public GameMode CurrentMode { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<GameMode> Select { get; set; }
+}

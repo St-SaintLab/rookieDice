@@ -1,0 +1,3 @@
+window.DiceInterop = {
+    ready: true
+};

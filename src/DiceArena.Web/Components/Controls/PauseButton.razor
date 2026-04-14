@@ -1,0 +1,8 @@
+<button class="action-btn" @onclick="OnClick">
+    @(IsPaused ? "Resume" : "Pause")
+</button>
+
+@code {
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public bool IsPaused { get; set; }
+}

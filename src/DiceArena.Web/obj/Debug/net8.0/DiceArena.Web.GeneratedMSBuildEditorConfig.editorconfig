@@ -1,0 +1,87 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = DiceArena.Web
+build_property.RootNamespace = DiceArena.Web
+build_property.ProjectDir = C:\Users\HP\rookieDice\src\DiceArena.Web\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\HP\rookieDice\src\DiceArena.Web
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Controls/CustomDiceButton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb250cm9sc1xDdXN0b21EaWNlQnV0dG9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Controls/ModeButton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb250cm9sc1xNb2RlQnV0dG9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Controls/PauseButton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb250cm9sc1xQYXVzZUJ1dHRvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Controls/RestartButton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb250cm9sc1xSZXN0YXJ0QnV0dG9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Controls/RollDiceButton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb250cm9sc1xSb2xsRGljZUJ1dHRvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Layout/HeaderBar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcSGVhZGVyQmFyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Modals/DiceBuilderModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RhbHNcRGljZUJ1aWxkZXJNb2RhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Panels/DiceArenaPanel.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYW5lbHNcRGljZUFyZW5hUGFuZWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Panels/LeaderboardPanel.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYW5lbHNcTGVhZGVyYm9hcmRQYW5lbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Panels/ModeSelectorPanel.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYW5lbHNcTW9kZVNlbGVjdG9yUGFuZWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Components/Panels/ResultPanel.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYW5lbHNcUmVzdWx0UGFuZWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/rookieDice/src/DiceArena.Web/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 

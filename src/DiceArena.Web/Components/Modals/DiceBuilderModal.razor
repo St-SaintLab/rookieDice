@@ -1,0 +1,92 @@
+@if (Visible)
+{
+    <div class="modal-backdrop">
+        <div class="modal-card glass-panel">
+            <div class="panel__header">
+                <div>
+                    <div class="panel__eyebrow">Custom dice</div>
+                    <h2 class="panel__title">Dice builder</h2>
+                </div>
+                <button class="icon-btn" @onclick="OnClose">✕</button>
+            </div>
+
+            <div class="builder-layout">
+                <div class="builder-form">
+                    <label>
+                        <span>Number of sides</span>
+                        <input type="number" min="2" max="100" @bind="Sides" />
+                    </label>
+                    <label>
+                        <span>Color</span>
+                        <input type="color" @bind="Color" />
+                    </label>
+                    <label>
+                        <span>Dice style</span>
+                        <select @bind="Style">
+                            @foreach (var option in StyleOptions)
+                            {
+                                <option value="@option">@option</option>
+                            }
+                        </select>
+                    </label>
+
+                    <div class="builder-actions">
+                        <button class="action-btn action-btn--accent" @onclick="Create">Create new custom dice</button>
+                        <button class="action-btn" @onclick="OnClose">Close</button>
+                    </div>
+                </div>
+
+                <div class="builder-preview">
+                    <div class="builder-preview__title">Saved custom dice</div>
+                    <div class="builder-list">
+                        @if (CustomDice is not null && CustomDice.Count > 0)
+                        {
+                            foreach (var dice in CustomDice)
+                            {
+                                <div class="builder-item @(ActiveDiceId == dice.Id ? "builder-item--active" : string.Empty)">
+                                    <div>
+                                        <strong>@dice.Name</strong>
+                                        <span>@dice.Sides sides · @dice.Style</span>
+                                    </div>
+                                    <button class="chip" @onclick="() => Activate.InvokeAsync(dice.Id)">Activate</button>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="empty-state">No custom dice yet. Create one to add it here.</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<DiceDefinition> OnCreate { get; set; }
+    [Parameter] public EventCallback<string> Activate { get; set; }
+    [Parameter] public IReadOnlyList<DiceDefinition> CustomDice { get; set; } = Array.Empty<DiceDefinition>();
+    [Parameter] public string? ActiveDiceId { get; set; }
+
+    private int Sides { get; set; } = 6;
+    private string Color { get; set; } = "#7CF7D4";
+    private string Style { get; set; } = "Neon";
+    private readonly string[] StyleOptions = ["Neon", "Glass", "Chrome", "Ivory"];
+
+    private async Task Create()
+    {
+        var dice = new DiceDefinition
+        {
+            Name = $"Custom {Sides}-sider",
+            Sides = Sides,
+            Color = Color,
+            Style = Style,
+            IsCustom = true
+        };
+
+        await OnCreate.InvokeAsync(dice);
+    }
+}

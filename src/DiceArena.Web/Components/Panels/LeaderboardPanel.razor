@@ -1,0 +1,34 @@
+<div class="panel glass-panel leaderboard-panel">
+    <div class="panel__header">
+        <div>
+            <div class="panel__eyebrow">Leaderboard</div>
+            <h2 class="panel__title">Premium scoreboard</h2>
+        </div>
+
+        <button type="button" class="chip" @onclick="OnReset">Reset leaderboard</button>
+    </div>
+
+    <section class="leaderboard-slot leaderboard-slot--top">
+        <div class="leaderboard-slot__label">Top Multiplayer score</div>
+        <div class="leaderboard-slot__body">
+            <strong>@MultiplayerPlayerName</strong>
+            <span>@MultiplayerScore</span>
+        </div>
+    </section>
+
+    <section class="leaderboard-slot leaderboard-slot--bottom">
+        <div class="leaderboard-slot__label">Top Vs AI score</div>
+        <div class="leaderboard-slot__body">
+            <strong>@VsAiPlayerName</strong>
+            <span>@VsAiScore</span>
+        </div>
+    </section>
+</div>
+
+@code {
+    [Parameter] public string MultiplayerPlayerName { get; set; } = "—";
+    [Parameter] public int MultiplayerScore { get; set; }
+    [Parameter] public string VsAiPlayerName { get; set; } = "—";
+    [Parameter] public int VsAiScore { get; set; }
+    [Parameter] public EventCallback OnReset { get; set; }
+}

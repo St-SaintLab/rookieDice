@@ -1,0 +1,55 @@
+@if (Visible)
+{
+    <div class="modal-backdrop win-modal-backdrop">
+        <div class="modal-card glass-panel win-modal" role="dialog" aria-modal="true" aria-labelledby="win-modal-title" aria-describedby="win-modal-message">
+            <div class="win-modal__shine"></div>
+
+            <div class="win-modal__header">
+                <div class="win-modal__badge">Jackpot</div>
+                <button type="button" class="icon-btn win-modal__close" @onclick="OnClose" aria-label="Close winning modal">✕</button>
+            </div>
+
+            <div class="win-modal__content">
+                <div class="win-modal__eyebrow">Winner</div>
+                <h2 class="win-modal__title" id="win-modal-title">@WinnerName have won!</h2>
+                <div class="win-modal__winner">with</div>
+                <div class="win-modal__total">@WinningTotal</div>
+                <div class="win-modal__winner">being a</div>
+                <div class="win-modal__rule">@RuleLabel</div>
+                <p class="win-modal__message" id="win-modal-message">@Message</p>
+            </div>
+
+            <div class="win-modal__confetti" aria-hidden="true">
+                @for (var i = 0; i < SparkleCount; i++)
+                {
+                    <span class="win-modal__sparkle" style="@GetSparkleStyle(i)"></span>
+                }
+            </div>
+
+            <div class="win-modal__footer">
+                <button type="button" class="action-btn action-btn--accent win-modal__button" @onclick="OnClose">Collect winnings</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public string WinnerName { get; set; } = "Winner";
+    [Parameter] public int WinningTotal { get; set; }
+    [Parameter] public string RuleLabel { get; set; } = string.Empty;
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private const int SparkleCount = 18;
+
+    private static string GetSparkleStyle(int index)
+    {
+        var left = (index * 11 + 9) % 100;
+        var delay = index * 0.08;
+        var size = 10 + (index % 4) * 4;
+        var speed = 1.7 + (index % 5) * 0.15;
+
+        return $"--sparkle-x:{left}%; --sparkle-delay:{delay:F2}s; --sparkle-size:{size}px; --sparkle-speed:{speed:F2}s;";
+    }
+}

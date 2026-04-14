@@ -1,0 +1,23 @@
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <link rel="icon" type="image/svg+xml" href="images/logo.svg" />
+    <title>Dice Arena</title>
+    <HeadOutlet @rendermode="InteractiveServer" />
+</head>
+<body>
+    <Routes @rendermode="InteractiveServer" />
+    <script src="_framework/blazor.web.js"></script>
+    <script src="js/diceAudio.js"></script>
+    <script src="js/canvasDice.js"></script>
+    <script src="js/interop.js"></script>
+</body>
+</html>
