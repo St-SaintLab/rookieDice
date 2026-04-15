@@ -7,10 +7,8 @@ RUN dotnet publish src/DiceArena.Web/DiceArena.Web.csproj -c Release -o /app/pub
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 
-ENV ASPNETCORE_ENVIRONMENT=Production
-ENV ASPNETCORE_HTTP_PORTS=10000
-
-EXPOSE 10000
+ENV ASPNETCORE_URLS=http://0.0.0.0:8080
+EXPOSE 8080
 
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "DiceArena.Web.dll"]
